@@ -119,16 +119,16 @@ parseOrder Logging{..} out@FullTxOut{..} =
     redeem  = parseFromLedger @Redeem out
   in case (swap, deposit, redeem) of
     (Just (OnChain _ swap'), _, _)    -> do
-      infoM ("Swap order in " ++ show fullTxOutRef)
+      debugM ("Swap order in " ++ show fullTxOutRef)
       pure $ Just . OnChain out $ AnyOrder (swapPoolId swap') (SwapAction swap')
     (_, Just (OnChain _ deposit'), _) -> do
-      infoM ("Deposit order in " ++ show fullTxOutRef)
+      debugM ("Deposit order in " ++ show fullTxOutRef)
       pure $  Just . OnChain out $ AnyOrder (depositPoolId deposit') (DepositAction deposit')
     (_, _, Just (OnChain _ redeem'))  -> do
-      infoM ("Redeem order in " ++ show fullTxOutRef)
+      debugM ("Redeem order in " ++ show fullTxOutRef)
       pure $  Just . OnChain out $ AnyOrder (redeemPoolId redeem') (RedeemAction redeem')
     _                                 -> do
-      infoM ("Order not found in: " ++ show fullTxOutRef)
+      debugM ("Order not found in: " ++ show fullTxOutRef)
       pure $ Nothing
 
 mkEliminatedOrdersHandler
